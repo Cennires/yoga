@@ -1,0 +1,22 @@
+{% extends "blog/base.html" %}
+{% load static %}
+{% block title %}
+    <title>Post Correct</title>
+{#    <title>{{ object_list[0].get_level_display }}</title>#}
+{% endblock title %}
+
+{% block content %}
+    <div class="col-md-7">
+    <div class="card article align-center">
+      <img class="responsive opacity" src="{{ path }}" alt="">
+        <div class="card-content">
+{#          <p class="date-field">{{ post.created_on|date:"d.m.y" }} / {{post.field}}</p>#}
+            <h2 class="article-title">Our Advice:</h2>
+          <div class="content">
+            <h3> {{ feedback }}</h3>
+          </div>
+        </div>
+        <p>{{ look }}</p>
+    </div>
+  </div>
+{% endblock content %}

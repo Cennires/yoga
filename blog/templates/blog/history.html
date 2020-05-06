@@ -1,0 +1,41 @@
+{% extends "blog/base.html" %}
+{% block title %}
+    <title>History</title>
+{#    <title>{{ object_list[0].get_level_display }}</title>#}
+{% endblock title %}
+{% block content %}
+{% for post in page_obj%}
+{% if forloop.counter0|divisibleby:3 %} <div class="row"> {%  endif %}
+  <div class="col-md-4">
+    <div class="card article">
+      <a href="{{ post.get_absolute_url }}"><img class="responsive opacity" src="{{ post.image.url }}" alt=""></a>
+        <div class="card-content">
+{#          <p class="date-field">{{ post.created_on|date:"d.m.y" }} / {{post.field}}</p>#}
+            <h2 class="article-title"><a class="link-article" href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+          <div class="content">
+            {{ post.content|safe|truncatewords:35 }}
+          </div>
+          <div class="button-wrapper"><a href="{{ post.imgage.url }}"><button class="button button1" >点开</button></a></div>
+        </div>
+    </div>
+  </div>
+{%  if forloop.counter|divisibleby:3 or forloop.last %}</div><br>{%  endif %}
+{%  endfor %}
+  {% if is_paginated %}
+    <div class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+      <a class='btn btn-outline-dark mb-4' href="?page=1">First</a>
+    {% endif %}
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <a class='btn btn-dark mb-4' href="?page= {{ num }}">{{ num }}</a>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a class='btn btn-outline-dark mb-4' href="?page= {{ num }}">{{ num }}</a>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+      <a class='btn btn-outline-dark mb-4' href="?page= {{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+    </div>
+  {% endif %}
+{% endblock content %}
