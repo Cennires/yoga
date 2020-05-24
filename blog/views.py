@@ -9,7 +9,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.utils import timezone
 from .models import Post,Yoga,DownYoga
+from .form import YogaCreategForm
 from .func import func
+from users.models import User
 import time
 import cv2
 import requests
@@ -44,12 +46,12 @@ class SeniorList(ListView):
 
 
 class HistoryList(ListView):
-    model = Post
+    model = DownYoga
     template_name = "blog/history.html"
     paginate_by = 3
 
     def get_queryset(self):
-        return Post.objects.filter(author=self.request.user)
+        return DownYoga.objects.filter(author=self.request.user)
 
 
 class PostList(ListView):
@@ -81,13 +83,13 @@ class PostCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     fields = ['title', 'image']
     template_name = 'blog/post_form.html'
     success_message = 'Post successfully saved!'
+    # def __init__(self, *args, **kwargs):
+    #     super(PostCreateView, self).__init__(*args, **kwargs)
+    #     self.fields['title'].queryset = Yoga.objects.all()
 
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
-    #
-    # def get_queryset(self):
-    #     return Yoga.objects.all()
 
 
 class Joint(object):
@@ -154,13 +156,20 @@ class Joint(object):
 
     def xunhun(self, img):
         im1 = cv2.imread(img, cv2.IMREAD_COLOR)
+        print("img:---------")
+        print(type(img))
+        print("im1:--------")
+        print(type(im1))
         # im2 = cv2.resize(im1, (500,900), interpolation=cv2.INTER_CUBIC)
 
         for i in self.dic:
             cv2.circle(im1, (int(self.dic[i]['x']), int(self.dic[i]['y'])), 5, (0, 255, 0), -1)
 
         self.draw_line(im1)
+        print("im1:---------")
+        print(type(im1))
         return im1
+
 
 import json
 def post_correct(request):
@@ -172,29 +181,34 @@ def post_correct(request):
     f = open(filename, 'rb')
     img = base64.b64encode(f.read())
     params = {"image": img}
-    access_token = "24.85ff7b63540069f746a3a4710c353a88.2592000.1591279549.282335-19733771"
+    access_token = '24.79e61d783b1a46dd85297aadb1a17475.2592000.1591325296.282335-19733981'
     request_url = request_url + "?access_token=" + access_token
     headers = {'content-type': 'application/x-www-form-urlencoded'}
     response = requests.post(request_url, data=params, headers=headers)
-    # if response:
-    #     print(response.json())
+    if response:
+        print(response.json())
     # 描绘肢体节点向量
     jo = Joint(response.json()['person_info'][0]['body_parts'])
     im1 = jo.xunhun(filename)
+    print(type(im1))
+    print(filename)
     # 保存图片
     cv2.imwrite('media/reback/{}.jpg'.format(post.title), im1)
     print('-------------------------------')
     with open("media/file/{}.json".format(post.title), "w") as fp:
         fp.write(json.dumps(response.json(), indent=4))
     # 生成结果图片
+    feedback = func(post.title)
     downYoga = DownYoga.objects.create(
         image = 'reback/{}.jpg'.format(post.title),
         jsonFile = 'file/{}.json'.format(post.title),
-        upPost = post
+        upPost = post,
+        content = feedback,
+        author = request.user
     )
     # 评价算法
-    feedback = func(post.title)
     return render(request, 'blog/post_correct.html',{'feedback': feedback,'path': downYoga.image.url})
+
 
 
 def about(request):

@@ -6,17 +6,18 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="col-md-7">
-    <div class="card article align-center">
-      <img class="responsive opacity" src="{{ path }}" alt="">
-        <div class="card-content">
-{#          <p class="date-field">{{ post.created_on|date:"d.m.y" }} / {{post.field}}</p>#}
-            <h2 class="article-title">Our Advice:</h2>
-          <div class="content">
-            <h3> {{ feedback }}</h3>
-          </div>
+    <div class="col-md-4 col-lg-offset-5" margin-left="20px">
+        <div class="card article">
+            <h2 class="article-title">识别结果及建议</h2>
         </div>
-        <p>{{ look }}</p>
+        <div class="card-content">
+                <img class="responsive opacity" aria-setsize="" src="{{ path }}" alt="">
+                    <div class="card-content">
+{#          <p class="date-field">{{ post.created_on|date:"d.m.y" }} / {{post.field}}</p>#}
+                        <h3> {{ feedback }}</h3>
+                        <p>{{ look }}</p>
+                    </div>
+        </div>
     </div>
-  </div>
+
 {% endblock content %}

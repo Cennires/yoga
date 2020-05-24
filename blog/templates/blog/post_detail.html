@@ -4,18 +4,20 @@
 {% endblock title %}
 {% block content %}
     <article class="media content-section align-center ">
-        <h2 class="article-title">{{ post.title}}</h2>
-        <div class="media-body">
-            <small class="text-muted right">{{ post.date_published|date:'F d, Y' }}</small>
-            <div class="article-metadata">
+        <div class="media-body col-md-6 col-lg-offset-3">
+            <div class="float-left">
+                <h2 class="article-title">{{ post.title}}</h2>
+            </div>
+            <div class="float-right">
+                <h3><a class="author float-right" href="{% url 'post-correct'%}">查看矫正结果</a></h3>
+            </div>
+            <div class="article-metadata col-md-8 col-lg-offset-6">
                 <img class='fa-times-rectangle article-img' src='{{ post.image.url}}' height="40%" height="40%">
             </div>
             <div class="float-right">
-{#                <a class='btn btn-secondary btn-sm mt-1 mb-1' href="{% url 'post-update' object.id %}">Update</a>#}
-{#                <a class='btn btn-secondary btn-sm mt-1 mb-1' href="{% url 'post-delete' object.id %}">Delete</a>#}
-{#                <a class="author float-right" href="{% url 'show_profile' post.author %}">{{ post.author }}</a>#}
-                <a class="author float-right" href="{% url 'post-correct'%}">查看矫正结果</a>#}
+                <small class="text-muted right">{{ post.date_published|date:'F d, Y' }}</small>
             </div>
         </div>
+
     </article>
 {% endblock content %}

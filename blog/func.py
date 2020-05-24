@@ -13,5 +13,4 @@ def func(text):
     if correct:
         return 'Exercise performed correctly!'
     else:
-        return 'Exercise could be improved:'+feedback
-
+        return 'Exercise could be improved:\n'+feedback
